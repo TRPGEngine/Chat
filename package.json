@@ -1,0 +1,26 @@
+{
+  "name": "trpg-chat",
+  "version": "1.0.0",
+  "description": "chat component",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TRPGEngine/Chat.git"
+  },
+  "keywords": [
+    "trpg",
+    "chat"
+  ],
+  "author": "moonrailgun",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/TRPGEngine/Chat/issues"
+  },
+  "homepage": "https://github.com/TRPGEngine/Chat#readme",
+  "dependencies": {
+    "debug": "^2.6.8"
+  }
+}
