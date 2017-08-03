@@ -6,4 +6,4 @@ app.load(player);
 app.load(chat);
 app.run();
 app.reset();
-app.close();
+// app.close();

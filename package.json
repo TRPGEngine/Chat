@@ -4,7 +4,7 @@
   "description": "chat component",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "DEBUG=trpg:* node test/test.js"
   },
   "repository": {
     "type": "git",
