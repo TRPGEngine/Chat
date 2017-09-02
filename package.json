@@ -4,7 +4,7 @@
   "description": "chat component",
   "main": "index.js",
   "scripts": {
-    "test": "set DEBUG=trpg:* && node test/test.js"
+    "test": "set DEBUG=trpg:*,socket.io:socket && node test/test.js"
   },
   "repository": {
     "type": "git",
