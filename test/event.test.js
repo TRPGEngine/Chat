@@ -35,5 +35,38 @@ describe('message action', () => {
     }
   })
 
-  test.todo('message should be ok')
+  test.todo('message should be ok');
+})
+
+describe('chat event action', () => {
+  let userInfo = {};
+  let userInfoDbInstance = null;
+
+  beforeAll(async () => {
+    const loginInfo = await emitEvent('player::login', {
+      username: 'admin1',
+      password: '21232f297a57a5a743894a0e4a801fc3'
+    })
+    expect(loginInfo.result).toBe(true);
+    userInfo = loginInfo.info
+
+    userInfoDbInstance = await db.models.player_user.findOne({
+      where: {uuid: userInfo.uuid}
+    })
+  })
+
+  afterAll(async () => {
+    await emitEvent('player::logout', {
+      uuid: userInfo.uuid,
+      token: userInfo.token
+    })
+
+    userInfo = {};
+    userInfoDbInstance = null;
+  })
+
+  test('getConverses should be ok', async () => {
+    let ret = await emitEvent('chat::getConverses');
+    console.log('ret', ret);
+  });
 })
