@@ -67,6 +67,7 @@ describe('chat event action', () => {
 
   test('getConverses should be ok', async () => {
     let ret = await emitEvent('chat::getConverses');
-    console.log('ret', ret);
+    expect(ret.result).toBe(true);
+    expect(Array.isArray(ret.list)).toBe(true);
   });
 })
