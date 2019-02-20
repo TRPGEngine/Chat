@@ -65,9 +65,35 @@ describe('chat event action', () => {
     userInfoDbInstance = null;
   })
 
-  test('getConverses should be ok', async () => {
-    let ret = await emitEvent('chat::getConverses');
-    expect(ret.result).toBe(true);
-    expect(Array.isArray(ret.list)).toBe(true);
-  });
+  describe('converse action', () => {
+    beforeEach(async () => {
+
+      this.converse = await db.models.chat_converse.create({
+        name: 'test_converse',
+      })
+      await this.converse.setOwner(userInfoDbInstance);
+    })
+
+    afterEach(async () => {
+      if(this.converse) {
+        await this.converse.destroy();
+      }
+    })
+
+    test('getConverses should be ok', async () => {
+      let ret = await emitEvent('chat::getConverses');
+      expect(ret.result).toBe(true);
+      expect(Array.isArray(ret.list)).toBe(true);
+    });
+
+    test('removeConverse should be ok', async () => {
+      let ret = await emitEvent('chat::removeConverse', {
+        converseUUID: this.converse.uuid
+      });
+      console.log(ret);
+      expect(ret.result).toBe(true);
+
+      this.converse = null;
+    })
+  })
 })
