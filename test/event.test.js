@@ -90,10 +90,9 @@ describe('chat event action', () => {
       let ret = await emitEvent('chat::removeConverse', {
         converseUUID: this.converse.uuid
       });
-      console.log(ret);
       expect(ret.result).toBe(true);
 
-      this.converse = null;
+      this.converse = null; // 手动清空
     })
   })
 })
