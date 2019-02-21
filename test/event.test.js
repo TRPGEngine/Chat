@@ -95,8 +95,9 @@ describe('chat event action', () => {
     })
   })
 
-  describe('message action', () => {
-    const targetUUID = 'trpg-test-uuid';
+  describe('message action', async () => {
+    const targetConverse = 'trpg-test-converse-' + Math.random();
+    const targetUUID = 'trpg-test-uuid-' + Math.random();
 
     beforeEach(async () => {
       this.testChatLog = await db.models.chat_log.create({
@@ -105,10 +106,17 @@ describe('chat event action', () => {
         message: 'test message',
         type: 'normal'
       })
+      this.testChatConverseLog = await db.models.chat_log.create({
+        sender_uuid: userInfo.uuid,
+        converse_uuid: targetConverse,
+        message: 'test converse message',
+        type: 'normal'
+      })
     })
 
     afterEach(async () => {
       await this.testChatLog.destroy();
+      await this.testChatConverseLog.destroy();
     })
 
     test('getUserChatLog should be ok', async () => {
@@ -120,6 +128,18 @@ describe('chat event action', () => {
         uuid: this.testChatLog.uuid,
         sender_uuid: userInfo.uuid,
         to_uuid: targetUUID
+      }])
+    })
+
+    test('getConverseChatLog should be ok', async () => {
+      let ret = await emitEvent('chat::getConverseChatLog', {converse_uuid: targetConverse});
+
+      expect(ret.result).toBe(true);
+      expect(Array.isArray(ret.list)).toBe(true);
+      expect(ret.list).toMatchObject([{
+        uuid: this.testChatConverseLog.uuid,
+        sender_uuid: userInfo.uuid,
+        converse_uuid: targetConverse
       }])
     })
   })
