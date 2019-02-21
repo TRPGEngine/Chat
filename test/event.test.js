@@ -67,7 +67,6 @@ describe('chat event action', () => {
 
   describe('converse action', () => {
     beforeEach(async () => {
-
       this.converse = await db.models.chat_converse.create({
         name: 'test_converse',
       })
@@ -93,6 +92,35 @@ describe('chat event action', () => {
       expect(ret.result).toBe(true);
 
       this.converse = null; // 手动清空
+    })
+  })
+
+  describe('message action', () => {
+    const targetUUID = 'trpg-test-uuid';
+
+    beforeEach(async () => {
+      this.testChatLog = await db.models.chat_log.create({
+        sender_uuid: userInfo.uuid,
+        to_uuid: targetUUID,
+        message: 'test message',
+        type: 'normal'
+      })
+    })
+
+    afterEach(async () => {
+      await this.testChatLog.destroy();
+    })
+
+    test('getUserChatLog should be ok', async () => {
+      let ret = await emitEvent('chat::getUserChatLog', {user_uuid: targetUUID});
+
+      expect(ret.result).toBe(true);
+      expect(Array.isArray(ret.list)).toBe(true);
+      expect(ret.list).toMatchObject([{
+        uuid: this.testChatLog.uuid,
+        sender_uuid: userInfo.uuid,
+        to_uuid: targetUUID
+      }])
     })
   })
 })
