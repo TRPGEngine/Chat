@@ -96,8 +96,8 @@ describe('chat event action', () => {
   })
 
   describe('message action', async () => {
-    const targetConverse = 'trpg-test-converse-' + Math.random();
-    const targetUUID = 'trpg-test-uuid-' + Math.random();
+    const targetConverse = 'test-trpg-converse-' + Math.random();
+    const targetUUID = 'test-trpg-uuid-' + Math.random();
 
     beforeEach(async () => {
       this.testChatLog = await db.models.chat_log.create({
@@ -135,12 +135,22 @@ describe('chat event action', () => {
       let ret = await emitEvent('chat::getConverseChatLog', {converse_uuid: targetConverse});
 
       expect(ret.result).toBe(true);
+      expect(ret).toHaveProperty('list');
       expect(Array.isArray(ret.list)).toBe(true);
       expect(ret.list).toMatchObject([{
         uuid: this.testChatConverseLog.uuid,
         sender_uuid: userInfo.uuid,
         converse_uuid: targetConverse
       }])
+    })
+
+    test('getAllUserConverse should be ok', async () => {
+      let ret = await emitEvent('chat::getAllUserConverse');
+      console.log(ret);
+      expect(ret.result).toBe(true);
+      expect(ret).toHaveProperty('senders');
+      expect(Array.isArray(ret.senders)).toBe(true);
+      expect(ret.senders).toEqual(expect.arrayContaining([targetUUID]))
     })
   })
 })
