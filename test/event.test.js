@@ -104,13 +104,15 @@ describe('chat event action', () => {
         sender_uuid: userInfo.uuid,
         to_uuid: targetUUID,
         message: 'test message',
-        type: 'normal'
+        type: 'normal',
+        date: new Date(),
       })
       this.testChatConverseLog = await db.models.chat_log.create({
         sender_uuid: userInfo.uuid,
         converse_uuid: targetConverse,
         message: 'test converse message',
-        type: 'normal'
+        type: 'normal',
+        date: new Date(),
       })
     })
 
@@ -146,7 +148,17 @@ describe('chat event action', () => {
 
     test('getAllUserConverse should be ok', async () => {
       let ret = await emitEvent('chat::getAllUserConverse');
-      console.log(ret);
+      expect(ret.result).toBe(true);
+      expect(ret).toHaveProperty('senders');
+      expect(Array.isArray(ret.senders)).toBe(true);
+      expect(ret.senders).toEqual(expect.arrayContaining([targetUUID]))
+    })
+
+    test('getOfflineUserConverse should be ok', async () => {
+      const now = new Date();
+      const lastLoginDate = new Date(now.setDate(now.getDate() - 10));
+      // 获取一天前到现在的所有会话
+      let ret = await emitEvent('chat::getOfflineUserConverse', {lastLoginDate});
       expect(ret.result).toBe(true);
       expect(ret).toHaveProperty('senders');
       expect(Array.isArray(ret.senders)).toBe(true);
