@@ -165,4 +165,24 @@ describe('chat event action', () => {
       expect(ret.senders).toEqual(expect.arrayContaining([targetUUID]))
     })
   })
+
+  test('updateCardChatData should be ok', async () => {
+    const testChat = await db.models.chat_log.create({
+      type: 'card',
+      sender_uuid: userInfo.uuid,
+      to_uuid: 'any user',
+      data: {number: 1, string: "2"}
+    })
+    expect(testChat).toBeTruthy();
+    expect(testChat.data).toMatchObject({number: 1, string: "2"})
+
+    let ret = await emitEvent('chat::updateCardChatData', {
+      chatUUID: testChat.uuid,
+      newData: {number: 3, array: ['1', '2']}
+    })
+    expect(ret.result).toBe(true);
+    expect(ret.log.data).toMatchObject({number: 3, array: ['1', '2'], string: "2"})
+
+    await testChat.destroy();
+  })
 })
